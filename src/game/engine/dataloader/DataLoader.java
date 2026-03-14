@@ -24,7 +24,7 @@ public class DataLoader {
     }
 
     public static ArrayList<Monster> readMonsters() throws IOException{
-        ArrayList<Monster> cards = new ArrayList<>();
+        ArrayList<Monster> cards = new ArrayList<>():
     }
 
 }
