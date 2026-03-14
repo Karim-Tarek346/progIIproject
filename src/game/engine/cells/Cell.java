@@ -6,6 +6,13 @@ public class Cell {
     private String name; //Get only
     private Monster monster;
 
+    public Cell(){}
+
+    public Cell(String name){
+        this.name = name;
+        this.monster = null;
+    }
+
     public String getName() {
         return name;
     }
@@ -18,10 +25,7 @@ public class Cell {
         this.monster = monster;
     }
 
-    public Cell(String name){
-        this.name = name;
-        this.monster = null;
-    }
+
 
 
 }
