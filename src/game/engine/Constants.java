@@ -1,8 +1,5 @@
 package game.engine;
 
-import java.security.Key;
-import java.security.PrivateKey;
-
 public final class Constants {
     public int BOARD_SIZE = 100;
     public int BOARD_ROWS = 10;

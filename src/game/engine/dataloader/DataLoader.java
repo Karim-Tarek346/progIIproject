@@ -5,8 +5,6 @@ import game.engine.monsters.Monster;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.io.BufferedReader;
-import java.io.FileReader;
 
 public class DataLoader {
     private String
