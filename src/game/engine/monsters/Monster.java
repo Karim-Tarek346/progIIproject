@@ -2,7 +2,7 @@ package game.engine.monsters;
 
 import game.engine.Role;
 
-abstract class Monster {
+public abstract class Monster {
     String name; // getter only
     String description; // getter only
     Role role;
