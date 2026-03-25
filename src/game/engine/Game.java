@@ -39,7 +39,7 @@ public class Game {
         else
             this.opponent = selectRandomMonstersByRole(Role.SCARER);
 
-        this.current = playe;
+        this.current = player;
 
     }
 
