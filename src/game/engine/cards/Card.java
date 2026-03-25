@@ -28,8 +28,4 @@ public abstract class Card {
     public boolean isLucky() {
         return lucky;
     }
-
-    public void setLucky(boolean lucky) {
-        this.lucky = lucky;
-    }
 }

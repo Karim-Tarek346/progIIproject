@@ -24,9 +24,4 @@ public class InvalidCSVFormat extends IOException{
         this.inputLine = inputLine;
     }
 
-    @Override
-    public String getMessage(){
-        return MSG + inputLine;
-    }
-
 }
