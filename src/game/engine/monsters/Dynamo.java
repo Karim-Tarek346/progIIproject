@@ -7,5 +7,8 @@ public class Dynamo extends Monster{
         super(name, description, role, energy);
     }
 
-
+    @Override
+    public int compareTo(Monster o){
+        return this.getPosition() - o.getPosition();
+    }
 }

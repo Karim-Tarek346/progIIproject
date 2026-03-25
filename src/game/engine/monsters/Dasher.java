@@ -5,9 +5,6 @@ import game.engine.Role;
 public class Dasher extends Monster{
     private int momentumTurns;
 
-    public Dasher() {
-    }
-
     public Dasher(String name, String description, Role role, int energy) {
         super(name, description, role, energy);
         this.momentumTurns = 0;
@@ -21,4 +18,9 @@ public class Dasher extends Monster{
         this.momentumTurns = momentumTurns;
     }
 
+    @Override
+    public int compareTo(Monster o){
+        return this.getPosition() - o.getPosition();
+    }
 }
+

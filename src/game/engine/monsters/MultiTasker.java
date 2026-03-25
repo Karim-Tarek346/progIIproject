@@ -7,7 +7,7 @@ public class MultiTasker extends Monster{
 
     public MultiTasker(String name, String description, Role role, int energy){
         super(name, description, role, energy);
-        ///this.normalSpeedTurns = 0;
+        this.normalSpeedTurns = 0;
     }
 
     public int getNormalSpeedTurns() {
@@ -16,5 +16,10 @@ public class MultiTasker extends Monster{
 
     public void setNormalSpeedTurns(int normalSpeedTurns) {
         this.normalSpeedTurns = normalSpeedTurns;
+    }
+
+    @Override
+    public int compareTo(Monster o){
+        return this.getPosition() - o.getPosition();
     }
 }

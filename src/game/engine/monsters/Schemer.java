@@ -6,4 +6,9 @@ public class Schemer extends Monster {
     public Schemer(String name, String description, Role role, int energy){
         super(name, description, role, energy);
     }
+
+    @Override
+    public int compareTo(Monster o){
+        return this.getPosition() - o.getPosition();
+    }
 }

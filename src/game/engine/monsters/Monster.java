@@ -3,19 +3,15 @@ package game.engine.monsters;
 import game.engine.Role;
 
 public abstract class Monster {
-    String name; // getter only
-    String description; // getter only
-    Role role;
-    Role originalRole; // getter only
-    int energy;
-    int position;
-    boolean frozen;
-    boolean shielded;
-    int confusionTurns;
-
-    public Monster(){
-
-    }
+    private final String name; // getter only
+    private final String description; // getter only
+    private Role role;
+    private final Role originalRole; // getter only
+    private int energy;
+    private int position;
+    private boolean frozen;
+    private boolean shielded;
+    private int confusionTurns;
 
     public Monster(String name, String description, Role originalRole, int energy) {
         this.name = name;
