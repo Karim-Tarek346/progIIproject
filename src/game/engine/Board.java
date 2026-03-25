@@ -10,9 +10,9 @@ import static game.engine.dataloader.DataLoader.readCards;
 
 public class Board {
     private Cell[][] boardCells; // Getter only
-    private static ArrayList<Monster> stationedMonsters; //Getter and Setter
-    private static ArrayList<Card> originalCards; // Getter only
-    private static ArrayList<Card> cards; //Getter and Setter
+    static ArrayList<Monster> stationedMonsters; //Getter and Setter
+    static ArrayList<Card> originalCards; // Getter only
+    static ArrayList<Card> cards; //Getter and Setter
 
     public static ArrayList<Monster> getStationedMonsters() {
         return stationedMonsters;

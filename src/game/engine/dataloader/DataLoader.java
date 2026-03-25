@@ -30,10 +30,10 @@ public class DataLoader {
                 // Trim every token
                 for (int i = 0; i < parts.length; i++) parts[i] = parts[i].trim();  //removes the empty spaces around a single string element
 
-                String cardType   = parts[0];
-                String name       = parts[1];
+                String cardType = parts[0];
+                String name = parts[1];
                 String description = parts[2];
-                int    rarity     = Integer.parseInt(parts[3]);
+                int rarity = Integer.parseInt(parts[3]);
 
                 switch (cardType) {
                     case "SwapperCard":
@@ -91,21 +91,19 @@ public class DataLoader {
 
                 if (parts.length == 3) {
                     // DoorCell: (name, role, energy)
-                    String name   = parts[0];
-                    Role   role   = Role.valueOf(parts[1]);
-                    int    energy = Integer.parseInt(parts[2]);
+                    String name = parts[0];
+                    Role role = Role.valueOf(parts[1]);
+                    int energy = Integer.parseInt(parts[2]);
                     cells.add(new DoorCell(name, role, energy));
 
-                } else if (parts.length == 2) {
+                }
+                else if (parts.length == 2) {
                     // TransportCell: (name, effect)
-                    String name   = parts[0];
-                    int    effect = Integer.parseInt(parts[1]);
+                    String name = parts[0];
+                    int effect = Integer.parseInt(parts[1]);
 
-                    if (effect >= 0) {
-                        cells.add(new ConveyorBelt(name, effect));
-                    } else {
-                        cells.add(new ContaminationSock(name, effect));
-                    }
+                    if (effect >= 0) cells.add(new ConveyorBelt(name, effect));
+                    else cells.add(new ContaminationSock(name, effect));
 
                 } else {
                     throw new InvalidCSVFormat(line);
@@ -129,11 +127,11 @@ public class DataLoader {
 
                 if (parts.length != 5) throw new InvalidCSVFormat(line); //number of lements must be 5 for monsters
 
-                String monsterType  = parts[0];
-                String name         = parts[1];
-                String description  = parts[2];
-                Role   role         = Role.valueOf(parts[3]);
-                int    energy       = Integer.parseInt(parts[4]);
+                String monsterType = parts[0];
+                String name = parts[1];
+                String description = parts[2];
+                Role role = Role.valueOf(parts[3]);
+                int energy = Integer.parseInt(parts[4]);
 
                 switch (monsterType) {
                     case "Dasher":

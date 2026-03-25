@@ -25,10 +25,6 @@ public abstract class Card {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public int getRarity() {
         return rarity;
     }
