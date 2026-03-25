@@ -10,9 +10,17 @@ import static game.engine.dataloader.DataLoader.readCards;
 
 public class Board {
     private Cell[][] boardCells; // Getter only
-    static ArrayList<Monster> stationedMonsters; //Getter and Setter
-    static ArrayList<Card> originalCards; // Getter only
-    static ArrayList<Card> cards; //Getter and Setter
+    private static ArrayList<Monster> stationedMonsters; //Getter and Setter
+    private static ArrayList<Card> originalCards; // Getter only
+    public static ArrayList<Card> cards; //Getter and Setter
+
+    public Board(ArrayList<Card> readCards){
+        stationedMonsters = new ArrayList<>();
+        cards = new ArrayList<>();
+        originalCards = readCards;
+        this.boardCells = new Cell[Constants.BOARD_ROWS][Constants.BOARD_COLS];
+
+    }
 
     public static ArrayList<Monster> getStationedMonsters() {
         return stationedMonsters;
@@ -37,14 +45,4 @@ public class Board {
     public static void setStationedMonsters(ArrayList<Monster> stationedMonsters) {
         Board.stationedMonsters = stationedMonsters;
     }
-
-    public Board(ArrayList<Card> readCards){
-        stationedMonsters = new ArrayList<>();
-        cards = new ArrayList<>();
-        originalCards = readCards;
-        this.boardCells = new Cell[Constants.BOARD_ROWS][Constants.BOARD_COLS];
-
-    }
-
-
 }
