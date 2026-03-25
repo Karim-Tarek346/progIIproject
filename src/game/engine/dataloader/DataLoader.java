@@ -36,33 +36,33 @@ public class DataLoader {
                 int rarity = Integer.parseInt(parts[3]);
 
                 switch (cardType) {
-                    case "SwapperCard":
+                    case "SWAPPER":
                         // (cardType, name, description, rarity)
                         if (parts.length != 4) throw new InvalidCSVFormat(line);
                         cards.add(new SwapperCard(name, description, rarity));
                         break;
 
-                    case "ShieldCard":
+                    case "SHIELD":
                         // (cardType, name, description, rarity)
                         if (parts.length != 4) throw new InvalidCSVFormat(line);
                         cards.add(new ShieldCard(name, description, rarity));
                         break;
 
-                    case "EnergyStealCard":
+                    case "ENERGYSTEAL":
                         // (cardType, name, description, rarity, energy)
                         if (parts.length != 5) throw new InvalidCSVFormat(line);
                         int energy = Integer.parseInt(parts[4]);
                         cards.add(new EnergyStealCard(name, description, rarity, energy));
                         break;
 
-                    case "StartOverCard":
+                    case "STARTOVER":
                         // (cardType, name, description, rarity, lucky)
                         if (parts.length != 5) throw new InvalidCSVFormat(line);
                         boolean lucky = Boolean.parseBoolean(parts[4]);
                         cards.add(new StartOverCard(name, description, rarity, lucky));
                         break;
 
-                    case "ConfusionCard":
+                    case "CONFUSION":
                         // (cardType, name, description, rarity, duration)
                         if (parts.length != 5) throw new InvalidCSVFormat(line);
                         int duration = Integer.parseInt(parts[4]);
@@ -134,16 +134,16 @@ public class DataLoader {
                 int energy = Integer.parseInt(parts[4]);
 
                 switch (monsterType) {
-                    case "Dasher":
+                    case "DASHER":
                         monsters.add(new Dasher(name, description, role, energy));
                         break;
-                    case "Dynamo":
+                    case "DYNAMO":
                         monsters.add(new Dynamo(name, description, role, energy));
                         break;
-                    case "MultiTasker":
+                    case "MULTITASKER":
                         monsters.add(new MultiTasker(name, description, role, energy));
                         break;
-                    case "Schemer":
+                    case "SCHEMER":
                         monsters.add(new Schemer(name, description, role, energy));
                         break;
                     default:

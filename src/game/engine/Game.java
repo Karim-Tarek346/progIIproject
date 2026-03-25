@@ -2,10 +2,8 @@ package game.engine;
 import game.engine.monsters.Monster;
 import game.engine.dataloader.DataLoader;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Game {
     private Board board; //Getter only
@@ -14,8 +12,21 @@ public class Game {
     private Monster opponent; //Getter
     private Monster current; // Getter and setter
 
+    public Game(Role playerRole) throws IOException {
+        this.board = new Board(DataLoader.readCards());
+        this.allMonsters = DataLoader.readMonsters();
+        this.player = selectRandomMonsterByRole(playerRole);
 
-    private Monster selectRandomMonstersByRole(Role role){
+        if(playerRole == Role.SCARER)
+            this.opponent = selectRandomMonsterByRole(Role.LAUGHER);
+        else
+            this.opponent = selectRandomMonsterByRole(Role.SCARER);
+
+        this.current = player;
+
+    }
+
+    private Monster selectRandomMonsterByRole(Role role){
 
         ArrayList<Monster> filtered = new ArrayList<>();
 
@@ -25,22 +36,6 @@ public class Game {
             }
         }
 
-        return filtered.get((int)Math.random() * filtered.size());
+        return filtered.get((int)(Math.random() * filtered.size()));
     }
-
-
-    public Game(Role playerRole) throws IOException {
-        this.board = new Board(DataLoader.readCards());
-        this.allMonsters = DataLoader.readMonsters();
-        this.player = selectRandomMonstersByRole(playerRole);
-
-        if(playerRole == Role.SCARER)
-            this.opponent = selectRandomMonstersByRole(Role.LAUGHER);
-        else
-            this.opponent = selectRandomMonstersByRole(Role.SCARER);
-
-        this.current = player;
-
-    }
-
 }

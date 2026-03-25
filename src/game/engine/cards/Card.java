@@ -17,20 +17,12 @@ public abstract class Card {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public int getRarity() {
         return rarity;
-    }
-
-    public void setRarity(int rarity) {
-        this.rarity = rarity;
     }
 
     public boolean isLucky() {
