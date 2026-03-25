@@ -3,14 +3,14 @@ package game.engine.cells;
 import game.engine.monsters.Monster;
 
 public class MonsterCell extends Cell {
-    private final Monster monsterCell;
+    private final Monster cellMonster;
 
-    public MonsterCell(String name, Monster monsterCell){
+    public MonsterCell(String name, Monster cellMonster){
         super(name);
-        this.monsterCell = monsterCell;
+        this.cellMonster = cellMonster;
     }
 
     public Monster getCellMonster() {
-        return monsterCell;
+        return cellMonster;
     }
 }
