@@ -22,5 +22,10 @@ public class Dasher extends Monster{
     public int compareTo(Monster o){
         return this.getPosition() - o.getPosition();
     }
+
+    @Override
+    public void executePowerupEffect(Monster opponentMonster) {
+        this.setMomentumTurns(3);
+    }
 }
 

@@ -109,7 +109,7 @@ public abstract class Monster implements Comparable<Monster>{
             this.setEnergy((this.getEnergy() + energy));
 
         else
-            this.setEnergy(energy);
+            this.setEnergy(this.getEnergy() + energy);
     }
 
     public void decrementConfusion(){

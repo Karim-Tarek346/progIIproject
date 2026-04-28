@@ -11,4 +11,9 @@ public class Dynamo extends Monster{
     public int compareTo(Monster o){
         return this.getPosition() - o.getPosition();
     }
+
+    @Override
+    public void executePowerupEffect(Monster opponentMonster) {
+        opponentMonster.setFrozen(true);
+    }
 }
