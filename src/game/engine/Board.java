@@ -45,4 +45,22 @@ public class Board {
     public static void setStationedMonsters(ArrayList<Monster> stationedMonsters) {
         Board.stationedMonsters = stationedMonsters;
     }
+
+    private int[] indexToRowCol(int index){
+        int row = index / Constants.BOARD_ROWS;
+        int col = (row % 2 == 0)? (index % Constants.BOARD_COLS) : Constants.BOARD_COLS - 1 - (index % Constants.BOARD_COLS);
+        return new int[]{row, col};
+    }
+
+    private Cell getCell(int index){
+        int[] split = indexToRowCol(index);
+        return boardCells[split[0]][split[1]];
+    }
+
+    private void setCell(int index, Cell cell){
+        int[] split = indexToRowCol(index);
+        boardCells[split[0]][split[1]] = cell;
+    }
+
+
 }

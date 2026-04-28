@@ -18,12 +18,12 @@ public class EnergyStealCard extends Card implements CanisterModifier {
     @Override
     public void performAction(Monster player, Monster opponent) {
         int stealAmount = Math.min(this.energy, opponent.getEnergy());
-        opponent.alterEnergy(-stealAmount);   // respects shield
-        player.alterEnergy(stealAmount);
+        modifyCanisterEnergy(opponent, -stealAmount);
+        modifyCanisterEnergy(player, stealAmount);
     }
 
     @Override
     public void modifyCanisterEnergy(Monster monster, int canisterValue) {
-
+        monster.alterEnergy(canisterValue);
     }
 }
