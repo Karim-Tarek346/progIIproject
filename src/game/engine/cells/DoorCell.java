@@ -21,54 +21,39 @@ public class DoorCell extends Cell implements CanisterModifier {
     }
 
     @Override
+    public void modifyCanisterEnergy(Monster monster, int canisterValue) {
+        monster.alterEnergy(canisterValue); //
+    }
+
+    @Override
     public void onLand(Monster landingMonster, Monster opponentMonster) throws InvalidMoveException {
-        // 1. Execute base cell logic to register the landing monster
-        super.onLand(landingMonster, opponentMonster); // [cite: 73]
+        super.onLand(landingMonster, opponentMonster); //
 
-        // 2. Check if the door is not yet activated
         if (!this.isActivated()) {
-            boolean energyChanged = false;
+            // Determine if it's a bonus (+) or penalty (-)
+            int effectValue = (landingMonster.getRole() == this.role) ? this.energy : -this.energy; //
 
-            // 3. Determine the energy modifier based on whose side the door is on
-            int energyModifier;
-            if (landingMonster.getRole() == this.getRole()) {
-                energyModifier = this.getEnergy(); // Positive gain if roles match [cite: 81]
-            } else {
-                energyModifier = -this.getEnergy(); // Penalty if roles mismatch [cite: 81]
-            }
+            // Record energy before changes to check if shield was used
+            int oldEnergy = landingMonster.getEnergy();
 
-            // 4. Modify the landing monster's energy
-            int initialLandingEnergy = landingMonster.getEnergy();
+            // 1. Apply to the landing monster directly
+            this.modifyCanisterEnergy(landingMonster, effectValue); //
 
-            // Use alterEnergy to automatically respect the shield mechanic [cite: 43, 81]
-            // Note: If you implemented CanisterModifier, you might call modifyCanisterEnergy() here instead
-            landingMonster.alterEnergy(energyModifier);
-
-            if (landingMonster.getEnergy() != initialLandingEnergy) {
-                energyChanged = true;
-            }
-
-            // 5. Modify stationed monsters of the same role as the landing monster
-            // Note: Adjust Board.getStationedMonsters() based on how you access your stationed monsters array/list
-            for (Monster stationedMonster : Board.getStationedMonsters()) { // [cite: 81]
-                if (stationedMonster.getRole() == landingMonster.getRole()) { // [cite: 81]
-                    int initialStationedEnergy = stationedMonster.getEnergy();
-
-                    stationedMonster.alterEnergy(energyModifier); // Respects shield [cite: 81]
-
-                    if (stationedMonster.getEnergy() != initialStationedEnergy) {
-                        energyChanged = true;
-                    }
+            // 2. Apply to the TEAM (All monsters with the landing monster's role)
+            // This includes the landing monster again, which explains the 320 vs 210 failure
+            for (Monster m : Board.getStationedMonsters()) { //
+                if (m.getRole() == landingMonster.getRole()) {
+                    this.modifyCanisterEnergy(m, effectValue); //
                 }
             }
 
-            // 6. Mark as activated ONLY if energy was gained or lost (e.g., not fully blocked by a shield)
-            if (energyChanged) { // [cite: 81]
-                this.setActivated(true); // [cite: 81]
+            // 3. Activation Logic: Only activate if someone's energy actually changed
+            // If a shield blocked the change, oldEnergy will equal newEnergy
+            if (landingMonster.getEnergy() != oldEnergy) { //
+                this.setActivated(true);
             }
         }
     }
-
     public int getEnergy() {
         return energy;
     }
