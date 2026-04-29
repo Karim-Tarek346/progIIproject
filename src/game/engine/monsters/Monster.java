@@ -101,15 +101,15 @@ public abstract class Monster implements Comparable<Monster>{
         this.setPosition(distance);
     }
 
-    public final void alterEnergy(int energy){
-        if (this.isShielded() && energy < this.getEnergy())
+    public final void alterEnergy(int energy) {
+        // 1. Check if the monster is shielded AND the energy change is negative (a penalty)
+        if (this.isShielded() && energy < 0) {
+            // 2. Consume the shield and do NOT change the energy
             this.setShielded(false);
-
-        else if(this.isShielded() && energy >= this.getEnergy())
-            this.setEnergy((this.getEnergy() + energy));
-
-        else
+        } else {
+            // 3. Otherwise, apply the energy change (positive or negative) to the current value
             this.setEnergy(this.getEnergy() + energy);
+        }
     }
 
     public void decrementConfusion(){
