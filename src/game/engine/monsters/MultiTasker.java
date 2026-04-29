@@ -27,4 +27,11 @@ public class MultiTasker extends Monster{
     public void executePowerupEffect(Monster opponentMonster) {
         this.setNormalSpeedTurns(2);
     }
+
+    @Override
+    public void move(int distance){
+        super.move(distance/2);
+    }
+
+
 }

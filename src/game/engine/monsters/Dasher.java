@@ -27,5 +27,11 @@ public class Dasher extends Monster{
     public void executePowerupEffect(Monster opponentMonster) {
         this.setMomentumTurns(3);
     }
+
+    @Override
+    public void move(int distance) {
+        // Dasher moves at 2x the provided distance (the dice roll)
+        super.move(distance * 2);
+    }
 }
 
