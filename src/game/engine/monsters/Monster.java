@@ -102,6 +102,9 @@ public abstract class Monster implements Comparable<Monster>{
     }
 
     public final void alterEnergy(int energy) {
+        //the passive change of dynamo
+        int modifiedEnergy = energy;
+        if(this instanceof Dynamo) modifiedEnergy = energy*2;
         // 1. Check if the monster is shielded AND the energy change is negative (a penalty)
         if (this.isShielded() && energy < 0) {
             // 2. Consume the shield and do NOT change the energy
