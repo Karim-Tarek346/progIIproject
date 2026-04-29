@@ -106,6 +106,7 @@ public abstract class Monster implements Comparable<Monster>{
         int modifiedEnergy = energy;
         if(this instanceof Dynamo) modifiedEnergy = energy*2;
         if(this instanceof MultiTasker) modifiedEnergy = energy+200;
+        if(this instanceof Schemer) modifiedEnergy = energy+10;
         // 1. Check if the monster is shielded AND the energy change is negative (a penalty)
         if (this.isShielded() && energy < 0) {
             // 2. Consume the shield and do NOT change the energy
