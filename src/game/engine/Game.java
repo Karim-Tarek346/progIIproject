@@ -35,17 +35,20 @@ public class Game {
 
     }
 
-    private Monster selectRandomMonsterByRole(Role role){
-
+    private Monster selectRandomMonsterByRole(Role role) {
         ArrayList<Monster> filtered = new ArrayList<>();
-
-        for(Monster m : allMonsters){
-            if(m.getRole() == role){
+        for (Monster m : allMonsters) {
+            if (m.getRole() == role) {
                 filtered.add(m);
             }
         }
 
-        return filtered.get((int)(Math.random() * filtered.size()));
+        // FIX: If no monsters match the role, return null instead of crashing
+        if (filtered.isEmpty()) {
+            return null;
+        }
+
+        return filtered.get((int) (Math.random() * filtered.size()));
     }
 
     public void setCurrent(Monster current) {
