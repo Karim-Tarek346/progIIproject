@@ -120,6 +120,32 @@ public class Game {
     private void switchTurn(){
         this.current = this.getCurrentOpponent();
     }
+
+    private boolean checkWinCondition(Monster monster) {
+        // 1. Check if the monster has reached the final cell (index 99)
+        boolean reachedEnd = monster.getPosition() >= 99;
+
+        // 2. Check if the monster has the required winning energy
+        boolean hasEnoughEnergy = monster.getEnergy() >= Constants.WINNING_ENERGY;
+
+        // 3. Both conditions must be true for a win
+        return reachedEnd && hasEnoughEnergy;
+    }
+
+    public Monster getWinner() {
+        // Check if the primary player has won
+        if (checkWinCondition(this.player)) {
+            return this.player;
+        }
+
+        // Check if the opponent has won
+        if (checkWinCondition(this.opponent)) {
+            return this.opponent;
+        }
+
+        // If no one has met the conditions yet, return null
+        return null;
+    }
 }
 
 
