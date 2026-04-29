@@ -46,24 +46,6 @@ public class Board {
         Board.stationedMonsters = stationedMonsters;
     }
 
-    public static void reloadCards() {
-        Collections.shuffle(cards);
-    }
-
-    public static Card drawCard() {
-        if (!(getCards().isEmpty())) {
-            Card temp = getCards().get(0);
-            cards.remove(0);
-            setCards(cards);
-            return temp;
-        } else {
-            setCards(originalCards);
-            reloadCards();
-        }
-        return drawCard();
-    }
-}
-
     private int[] indexToRowCol(int index){
         int row = index / Constants.BOARD_ROWS;
         int col = (row % 2 == 0)? (index % Constants.BOARD_COLS) : Constants.BOARD_COLS - 1 - (index % Constants.BOARD_COLS);
@@ -80,10 +62,22 @@ public class Board {
         boardCells[split[0]][split[1]] = cell;
     }
 
+    public static void reloadCards() {
+        Collections.shuffle(cards);
+    }
 
-
-
-
+    public static Card drawCard() {
+        if (!(getCards().isEmpty())) {
+            Card temp = getCards().get(0);
+            cards.remove(0);
+            setCards(cards);
+            return temp;
+        } else {
+            setCards(originalCards);
+            reloadCards();
+        }
+        return drawCard();
+    }
 
 
 }
