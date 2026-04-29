@@ -1,5 +1,6 @@
 package game.engine.cells;
 
+import game.engine.exceptions.InvalidMoveException;
 import game.engine.monsters.Monster;
 
 public class MonsterCell extends Cell {
@@ -12,5 +13,17 @@ public class MonsterCell extends Cell {
 
     public Monster getCellMonster() {
         return cellMonster;
+    }
+
+    @Override
+    public void onLand(Monster landingMonster, Monster opponentMonster) throws InvalidMoveException {
+        if (landingMonster.getRole().equals(cellMonster.getRole()))
+            landingMonster.executePowerupEffect(opponentMonster);
+
+        else if (landingMonster.getEnergy() > cellMonster.getEnergy()) {
+            int temp = landingMonster.getEnergy();
+            landingMonster.alterEnergy(cellMonster.getEnergy());
+            cellMonster.alterEnergy(temp);
+        }
     }
 }
