@@ -63,7 +63,8 @@ public class Board {
     }
 
     public static void reloadCards() {
-        setCards(originalCards);
+        // Create a new list using the elements of the original
+        cards = new ArrayList<>(originalCards);
         Collections.shuffle(cards);
     }
 
