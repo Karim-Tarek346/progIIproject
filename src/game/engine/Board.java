@@ -192,8 +192,26 @@ public class Board {
         this.updateMonsterPositions(currentMonster, opponentMonster);
     }
 
-    private void updateMonsterPositions(Monster player, Monster opponent){
-        
+    private void updateMonsterPositions(Monster player, Monster opponent) {
+        // 1. Clear the entire board of the moving players
+        for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+            Cell currentCell = this.getCell(i);
+
+            // Wipe the moving monster from the cell
+            // (Note: If your MonsterCell class uses this same variable for stationed
+            // monsters, you might need an 'if !(currentCell instanceof MonsterCell)' here)
+            currentCell.setMonster(null);
+        }
+
+        // 2. Place the primary player on their exact current position
+        int playerPos = player.getPosition();
+        Cell playerLandedCell = this.getCell(playerPos);
+        playerLandedCell.setMonster(player);
+
+        // 3. Place the opponent on their exact current position
+        int opponentPos = opponent.getPosition();
+        Cell opponentLandedCell = this.getCell(opponentPos);
+        opponentLandedCell.setMonster(opponent);
     }
 
 }

@@ -17,6 +17,8 @@ public class Game {
     public Game(Role playerRole) throws IOException {
         this.board = new Board(DataLoader.readCards());
         this.allMonsters = DataLoader.readMonsters();
+        Board.setStationedMonsters(this.allMonsters);
+        this.board.initializeBoard(DataLoader.readCells());
         this.player = selectRandomMonsterByRole(playerRole);
 
         if(playerRole == Role.SCARER)
@@ -25,6 +27,11 @@ public class Game {
             this.opponent = selectRandomMonsterByRole(Role.SCARER);
 
         this.current = player;
+
+        this.player.setPosition(Constants.STARTING_POSITION);
+        this.opponent.setPosition(Constants.STARTING_POSITION);
+        this.current = player;
+
 
     }
 
