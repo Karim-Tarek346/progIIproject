@@ -62,4 +62,8 @@ public class Game {
     public Monster getCurrent() {
         return current;
     }
+
+    private int rollDice() {
+        return (int) (Math.random() * 6) + 1;
+    }
 }
