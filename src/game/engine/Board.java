@@ -1,5 +1,6 @@
 package game.engine;
-import game.engine.cells.Cell;
+import game.engine.cells.*;
+import game.engine.exceptions.InvalidMoveException;
 import game.engine.monsters.Monster;
 import game.engine.cards.Card;
 import game.engine.Constants;
@@ -82,10 +83,6 @@ public class Board {
         return drawn;
     }
 
-    public void initializeBoard(ArrayList<Cell> specialCells){
-
-    }
-
     private void setCardsByRarity(){
         ArrayList<Card> expandedDeck = new ArrayList<>();
 
@@ -100,6 +97,103 @@ public class Board {
         }
         originalCards = expandedDeck;
 
+    }
+
+    public void initializeBoard(ArrayList<Cell> specialCells) {
+        // 1. Separate the loaded CSV cells by their exact type
+        ArrayList<DoorCell> doors = new ArrayList<>();
+        ArrayList<Cell> belts = new ArrayList<>();
+        ArrayList<Cell> socks = new ArrayList<>();
+
+        for (Cell c : specialCells) {
+            if (c instanceof DoorCell) {
+                doors.add((DoorCell) c);
+            } else if (c instanceof ConveyorBelt) {
+                belts.add(c);
+            } else if (c instanceof ContaminationSock) {
+                socks.add(c);
+            }
+        }
+
+        // 2. Build the Base Grid (Even = Rest Cell, Odd = DoorCell)
+        int doorIndex = 0;
+        for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+            if (i % 2 == 0) {
+                // Creates a default cell with a string argument
+                this.setCell(i, new Cell("Cell"));
+            } else {
+                // Places a DoorCell from the loaded CSV
+                this.setCell(i, doors.get(doorIndex));
+                doorIndex++;
+            }
+        }
+
+        // 3. Overwrite specific indices with the separated Special Cells
+        int beltIndex = 0;
+        for (int index : Constants.CONVEYOR_CELL_INDICES) {
+            this.setCell(index, belts.get(beltIndex));
+            beltIndex++;
+        }
+
+        int sockIndex = 0;
+        for (int index : Constants.SOCK_CELL_INDICES) {
+            this.setCell(index, socks.get(sockIndex));
+            sockIndex++;
+        }
+
+        for (int index : Constants.CARD_CELL_INDICES) {
+            // Creates a CardCell with a string argument
+            this.setCell(index, new CardCell("CardCell"));
+        }
+
+        // 4. Combine Monster setup and MonsterCell instantiation
+        ArrayList<Monster> stationed = getStationedMonsters();
+
+        for (int i = 0; i < stationed.size(); i++) {
+            // Define 'm' by getting it from the stationed list
+            Monster m = stationed.get(i);
+
+            // Set the monster's position property
+            int pos = Constants.MONSTER_CELL_INDICES[i];
+            m.setPosition(pos);
+
+            // Create the MonsterCell using both the string name and the valid 'm' object
+            this.setCell(pos, new MonsterCell("MonsterCell", m));
+        }
+    }
+
+
+    public void moveMonster(Monster currentMonster, int roll, Monster opponentMonster) throws InvalidMoveException{
+        int originalPosition = currentMonster.getPosition();
+        currentMonster.move(roll);
+
+        if (currentMonster.getPosition() > Constants.WINNING_POSITION)
+            currentMonster.setPosition(Constants.WINNING_POSITION);
+
+        if (currentMonster.getPosition() == opponentMonster.getPosition()) {
+            currentMonster.setPosition(originalPosition);
+            throw new InvalidMoveException("Move invalid: Cannot land directly on the opponent.");
+        }
+
+        Cell landedCell = this.getCell(currentMonster.getPosition());
+        landedCell.onLand(currentMonster, opponentMonster);
+
+        if (currentMonster.getPosition() == opponentMonster.getPosition()) {
+            currentMonster.setPosition(originalPosition);
+            throw new InvalidMoveException("Move invalid: Cell effect caused a collision.");
+        }
+
+        if (currentMonster.getConfusionTurns() > 0)
+            currentMonster.setConfusionTurns(currentMonster.getConfusionTurns() - 1);
+
+        if (opponentMonster.getConfusionTurns() > 0)
+            opponentMonster.setConfusionTurns(opponentMonster.getConfusionTurns() - 1);
+
+        this.updateMonsterPositions(currentMonster, opponentMonster);
+    }
+
+    private void updateMonsterPositions(Monster player, Monster opponent){
+        
     }
 
 }
