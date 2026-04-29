@@ -1,5 +1,6 @@
 package game.engine.cells;
 
+import game.engine.exceptions.InvalidMoveException;
 import game.engine.monsters.Monster;
 
 public abstract class TransportCell extends Cell{
@@ -15,15 +16,15 @@ public abstract class TransportCell extends Cell{
     }
 
     @Override
-    public void onLand(Monster landingMonster, Monster opponentMonster){
+    public void onLand(Monster landingMonster, Monster opponentMonster) throws InvalidMoveException {
         super.onLand(landingMonster, opponentMonster);
         transport(landingMonster);
     }
 
-    public void transport(Monster monster){
+    public void transport(Monster monster) throws InvalidMoveException{
         monster.move(effect);
         //if out of the board
-        if(monster.getPosition() > 99) monster.setPosition(99);
-        else if (monster.getPosition() < 0) monster.setPosition(0);
+        if(monster.getPosition() > 99) throw new InvalidMoveException("Exceed Maximum index");
+        else if (monster.getPosition() < 0) throw new InvalidMoveException("Exceeded Minimum index");
     }
 }

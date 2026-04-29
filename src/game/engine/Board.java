@@ -4,7 +4,7 @@ import game.engine.monsters.Monster;
 import game.engine.cards.Card;
 import game.engine.Constants;
 
-import java.util.ArrayList;
+import java.util.*;
 
 import static game.engine.dataloader.DataLoader.readCards;
 
@@ -14,7 +14,7 @@ public class Board {
     private static ArrayList<Card> originalCards; // Getter only
     public static ArrayList<Card> cards; //Getter and Setter
 
-    public Board(ArrayList<Card> readCards){
+    public Board(ArrayList<Card> readCards) {
         stationedMonsters = new ArrayList<>();
         cards = new ArrayList<>();
         originalCards = readCards;
@@ -46,6 +46,24 @@ public class Board {
         Board.stationedMonsters = stationedMonsters;
     }
 
+    public static void reloadCards() {
+        Collections.shuffle(cards);
+    }
+
+    public static Card drawCard() {
+        if (!(getCards().isEmpty())) {
+            Card temp = getCards().get(0);
+            cards.remove(0);
+            setCards(cards);
+            return temp;
+        } else {
+            setCards(originalCards);
+            reloadCards();
+        }
+        return drawCard();
+    }
+}
+
     private int[] indexToRowCol(int index){
         int row = index / Constants.BOARD_ROWS;
         int col = (row % 2 == 0)? (index % Constants.BOARD_COLS) : Constants.BOARD_COLS - 1 - (index % Constants.BOARD_COLS);
@@ -61,6 +79,11 @@ public class Board {
         int[] split = indexToRowCol(index);
         boardCells[split[0]][split[1]] = cell;
     }
+
+
+
+
+
 
 
 }

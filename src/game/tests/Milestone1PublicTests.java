@@ -81,7 +81,7 @@ public class Milestone1PublicTests {
 	public void testCellInstanceVariableNameIsPrivate() throws NoSuchFieldException, SecurityException, ClassNotFoundException{
 		testInstanceVariableIsPrivate(Class.forName(cellPath), "name");
 
-	}
+	}d
 	@Test(timeout = 1000)
 	public void testCellInstanceVariableNameGetterExists() throws ClassNotFoundException{
 		testGetterMethodExistInClass(Class.forName(cellPath), "getName",String.class);

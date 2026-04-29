@@ -1,5 +1,6 @@
 package game.engine.cells;
 
+import game.engine.exceptions.InvalidMoveException;
 import game.engine.monsters.Monster;
 
 public class Cell {
@@ -27,7 +28,10 @@ public class Cell {
         return monster != null;
     }
 
-    public void onLand(Monster landingMonster, Monster opponentMonster){
+    public void onLand(Monster landingMonster, Monster opponentMonster) throws InvalidMoveException {
+        if(isOccupied())
+            throw new InvalidMoveException("Cannot replace Monster in this cell");
         this.monster = landingMonster;
+
     }
 }
