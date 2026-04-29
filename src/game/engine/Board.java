@@ -20,6 +20,12 @@ public class Board {
         originalCards = readCards;
         this.boardCells = new Cell[Constants.BOARD_ROWS][Constants.BOARD_COLS];
 
+        // Expands the originalCards list based on the rarity of each card
+        this.setCardsByRarity();
+
+        // Copies the expanded originalCards into the active 'cards' deck and shuffles it
+        Board.reloadCards();
+
     }
 
     public static ArrayList<Monster> getStationedMonsters() {
@@ -77,6 +83,22 @@ public class Board {
     }
 
     public void initializeBoard(ArrayList<Cell> specialCells){
+
+    }
+
+    private void setCardsByRarity(){
+        ArrayList<Card> expandedDeck = new ArrayList<>();
+
+        for(int i = 0; i < originalCards.size(); i++){
+            Card currentCard = originalCards.get(i);
+
+            int rarity = currentCard.getRarity();
+
+            for(int j = 0; j < rarity; j++){
+                expandedDeck.add(currentCard);
+            }
+        }
+        originalCards = expandedDeck;
 
     }
 
