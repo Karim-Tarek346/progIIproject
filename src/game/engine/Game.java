@@ -1,4 +1,5 @@
 package game.engine;
+import game.engine.exceptions.OutOfEnergyException;
 import game.engine.monsters.Monster;
 import game.engine.dataloader.DataLoader;
 
@@ -65,12 +66,34 @@ public class Game {
 
     private int rollDice() {
         return (int) (Math.random() * 6) + 1;
+
     }
 
     private Monster getCurrentOpponent(){
         if(current == player)
             return opponent;
         return player;
+    }
+
+    public void usePowerup() throws OutOfEnergyException {
+        // 1. Get the current active monster and its opponent
+        Monster current = this.current;
+        Monster opponent = this.getCurrentOpponent();
+
+        // 2. Define the energy cost (ensure this matches your Constants class)
+        int powerupCost = Constants.POWERUP_COST;
+
+        // 3. Check if the monster can afford the move
+        if (current.getEnergy() < powerupCost) {
+            // If not enough energy, throw the specific exception
+            throw new OutOfEnergyException();
+        }
+
+        // 4. Subtract the energy cost
+        current.setEnergy(current.getEnergy() - powerupCost);
+
+        // 5. Trigger the specific powerup effect on the opponent
+        current.executePowerupEffect(opponent);
     }
 }
 
