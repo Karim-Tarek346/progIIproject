@@ -7,4 +7,5 @@ public class ConveyorBelt extends TransportCell {
         super(name,effect);
     }
 
+
 }

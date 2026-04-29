@@ -30,4 +30,7 @@ public class DoorCell extends Cell implements CanisterModifier {
     public void setActivated(boolean activated) {
         this.activated = activated;
     }
+
+
+
 }
