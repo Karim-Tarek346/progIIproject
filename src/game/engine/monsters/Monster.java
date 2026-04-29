@@ -98,7 +98,7 @@ public abstract class Monster implements Comparable<Monster>{
     }
 
     public void move(int distance){
-        this.setPosition(distance);
+        this.setPosition(this.getPosition() + distance);
     }
 
     public final void alterEnergy(int energy) {
