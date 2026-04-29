@@ -63,21 +63,20 @@ public class Board {
     }
 
     public static void reloadCards() {
+        setCards(originalCards);
         Collections.shuffle(cards);
     }
 
     public static Card drawCard() {
-        if (!(getCards().isEmpty())) {
-            Card temp = getCards().get(0);
-            cards.remove(0);
-            setCards(cards);
-            return temp;
-        } else {
-            setCards(originalCards);
-            reloadCards();
-        }
-        return drawCard();
+        if (getCards().isEmpty()) reloadCards();
+        Card drawn = getCards().get(0);
+        cards.remove(0);
+        setCards(cards);
+        return drawn;
     }
 
+    public void initializeBoard(ArrayList<Cell> specialCells){
+
+    }
 
 }
