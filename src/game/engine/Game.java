@@ -1,4 +1,5 @@
 package game.engine;
+import game.engine.exceptions.InvalidMoveException;
 import game.engine.exceptions.OutOfEnergyException;
 import game.engine.monsters.Monster;
 import game.engine.dataloader.DataLoader;
@@ -94,6 +95,30 @@ public class Game {
 
         // 5. Trigger the specific powerup effect on the opponent
         current.executePowerupEffect(opponent);
+    }
+
+    public void playTurn() throws InvalidMoveException {
+        Monster active = this.current;
+
+        // 1. Check if the current monster is frozen
+        if (active.isFrozen()) {
+            // Skip turn and unfreeze for the next round
+            active.setFrozen(false);
+        } else {
+            // 2. Roll the dice (1-6)
+            int roll = this.rollDice();
+
+            // 3. Move the monster on the board
+            // This method also triggers onLand effects and checks for collisions
+            this.board.moveMonster(active, roll, this.getCurrentOpponent());
+        }
+
+        // 4. Always switch the turn at the end
+        this.switchTurn();
+    }
+
+    private void switchTurn(){
+        this.current = this.getCurrentOpponent();
     }
 }
 
