@@ -30,8 +30,15 @@ public class Dasher extends Monster{
 
     @Override
     public void move(int distance) {
-        // Dasher moves at 2x the provided distance (the dice roll)
-        super.move(distance * 2);
+        if (this.getMomentumTurns() > 0) {
+            // If powerup is active, move at 3x speed
+            super.move(distance * 3);
+            // Decrement the timer after moving
+            this.setMomentumTurns(this.getMomentumTurns() - 1);
+        } else {
+            // Default Dasher passive: 2x speed
+            super.move(distance * 2);
+        }
     }
 }
 
