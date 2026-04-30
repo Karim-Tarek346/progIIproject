@@ -29,7 +29,9 @@ public abstract class Monster implements Comparable<Monster>{
         this.shielded = false;
     }
 
-    public abstract int compareTo(Monster o);
+    public int compareTo(Monster o){
+        return this.position - o.getPosition();
+    };
 
     public Role getRole() {
         return role;
@@ -102,18 +104,18 @@ public abstract class Monster implements Comparable<Monster>{
     }
 
     public final void alterEnergy(int energy) {
-        //the passive change of dynamo
         int modifiedEnergy = energy;
-        if(this instanceof Dynamo) modifiedEnergy = energy*2;
-        if(this instanceof MultiTasker) modifiedEnergy = energy+200;
-        if(this instanceof Schemer) modifiedEnergy = energy+10;
-        // 1. Check if the monster is shielded AND the energy change is negative (a penalty)
-        if (this.isShielded() && energy < 0) {
-            // 2. Consume the shield and do NOT change the energy
+
+        // Apply passives using the modifiedEnergy variable
+        if (this instanceof Dynamo && energy > 0) modifiedEnergy = energy * 2;
+        if (this instanceof MultiTasker) modifiedEnergy = energy + Constants.MULTITASKER_BONUS;
+        if (this instanceof Schemer) modifiedEnergy = energy + Constants.SCHEMER_STEAL;
+
+        // Only block damage (negative energy) with a shield
+        if (this.isShielded() && modifiedEnergy < 0) {
             this.setShielded(false);
         } else {
-            // 3. Otherwise, apply the energy change (positive or negative) to the current value
-            this.setEnergy(this.getEnergy() + energy);
+            this.setEnergy(this.getEnergy() + modifiedEnergy);
         }
     }
 
