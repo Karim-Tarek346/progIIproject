@@ -100,70 +100,63 @@ public class Board {
     }
 
     public void initializeBoard(ArrayList<Cell> specialCells) {
-        // 1. Separate the loaded CSV cells by their exact type
+        // 1. Separate cells (Logic remains same)
         ArrayList<DoorCell> doors = new ArrayList<>();
         ArrayList<Cell> belts = new ArrayList<>();
         ArrayList<Cell> socks = new ArrayList<>();
-
         for (Cell c : specialCells) {
-            if (c instanceof DoorCell) {
-                doors.add((DoorCell) c);
-            } else if (c instanceof ConveyorBelt) {
-                belts.add(c);
-            } else if (c instanceof ContaminationSock) {
-                socks.add(c);
-            }
+            if (c instanceof DoorCell) doors.add((DoorCell) c);
+            else if (c instanceof ConveyorBelt) belts.add(c);
+            else if (c instanceof ContaminationSock) socks.add(c);
         }
 
-        // 2. Build the Base Grid (Even = Rest Cell, Odd = DoorCell)
+        // 2. Build Grid with Safety Checks
         int doorIndex = 0;
         for (int i = 0; i < Constants.BOARD_SIZE; i++) {
             if (i % 2 == 0) {
-                // Creates a default cell with a string argument
-                this.setCell(i, new Cell("Cell"));
+                this.setCell(i, new Cell("Rest Cell"));
             } else {
-                // Places a DoorCell from the loaded CSV
-                this.setCell(i, doors.get(doorIndex));
-                doorIndex++;
+                if (doorIndex < doors.size()) {
+                    this.setCell(i, doors.get(doorIndex));
+                    doorIndex++;
+                } else {
+                    this.setCell(i, new Cell("Rest Cell"));
+                }
             }
         }
 
-        // 3. Overwrite specific indices with the separated Special Cells
+        // 3. Overwrite with Specials using list size checks
         int beltIndex = 0;
         for (int index : Constants.CONVEYOR_CELL_INDICES) {
-            this.setCell(index, belts.get(beltIndex));
-            beltIndex++;
+            if (beltIndex < belts.size()) {
+                this.setCell(index, belts.get(beltIndex));
+                beltIndex++;
+            }
         }
 
         int sockIndex = 0;
         for (int index : Constants.SOCK_CELL_INDICES) {
-            this.setCell(index, socks.get(sockIndex));
-            sockIndex++;
+            if (sockIndex < socks.size()) {
+                this.setCell(index, socks.get(sockIndex));
+                sockIndex++;
+            }
         }
 
         for (int index : Constants.CARD_CELL_INDICES) {
-            // Creates a CardCell with a string argument
-            this.setCell(index, new CardCell("CardCell"));
+            this.setCell(index, new CardCell("Card Cell"));
         }
 
-        // 4. Combine Monster setup and MonsterCell instantiation
+        // 4. Station Monsters
         ArrayList<Monster> stationed = getStationedMonsters();
-
         for (int i = 0; i < stationed.size(); i++) {
-            // Define 'm' by getting it from the stationed list
             Monster m = stationed.get(i);
-
-            // Set the monster's position property
             int pos = Constants.MONSTER_CELL_INDICES[i];
             m.setPosition(pos);
-
-            // Create the MonsterCell using both the string name and the valid 'm' object
-            this.setCell(pos, new MonsterCell("MonsterCell", m));
+            this.setCell(pos, new MonsterCell("Monster Cell", m));
         }
     }
 
-
-    public void moveMonster(Monster currentMonster, int roll, Monster opponentMonster) throws InvalidMoveException{
+    public void moveMonster(Monster currentMonster, int roll, Monster opponentMonster) throws InvalidMoveException {
         int originalPosition = currentMonster.getPosition();
         currentMonster.move(roll);
 
@@ -172,46 +165,38 @@ public class Board {
 
         if (currentMonster.getPosition() == opponentMonster.getPosition()) {
             currentMonster.setPosition(originalPosition);
-            throw new InvalidMoveException("Move invalid: Cannot land directly on the opponent.");
+            throw new InvalidMoveException("Cannot land on the opponent.");
         }
 
+        // Trigger cell effect
         Cell landedCell = this.getCell(currentMonster.getPosition());
         landedCell.onLand(currentMonster, opponentMonster);
 
+        // Second collision check after traps/cards
         if (currentMonster.getPosition() == opponentMonster.getPosition()) {
             currentMonster.setPosition(originalPosition);
-            throw new InvalidMoveException("Move invalid: Cell effect caused a collision.");
+            throw new InvalidMoveException("Trap caused collision.");
         }
 
-        if (currentMonster.getConfusionTurns() > 0)
-            currentMonster.setConfusionTurns(currentMonster.getConfusionTurns() - 1);
-
-        if (opponentMonster.getConfusionTurns() > 0)
-            opponentMonster.setConfusionTurns(opponentMonster.getConfusionTurns() - 1);
+        // Only decrement the active monster's confusion
+        currentMonster.decrementConfusion();
 
         this.updateMonsterPositions(currentMonster, opponentMonster);
     }
 
     private void updateMonsterPositions(Monster player, Monster opponent) {
-        // 1. Clear the entire board of the moving players
         for (int i = 0; i < Constants.BOARD_SIZE; i++) {
             Cell currentCell = this.getCell(i);
 
-            // Wipe the moving monster from the cell
-            // (Note: If your MonsterCell class uses this same variable for stationed
-            // monsters, you might need an 'if !(currentCell instanceof MonsterCell)' here)
-            currentCell.setMonster(null);
+            // PRESERVE STATIONED MONSTERS:
+            // Do not clear cells that are MonsterCells
+            if (!(currentCell instanceof MonsterCell)) {
+                currentCell.setMonster(null);
+            }
         }
-
-        // 2. Place the primary player on their exact current position
-        int playerPos = player.getPosition();
-        Cell playerLandedCell = this.getCell(playerPos);
-        playerLandedCell.setMonster(player);
-
-        // 3. Place the opponent on their exact current position
-        int opponentPos = opponent.getPosition();
-        Cell opponentLandedCell = this.getCell(opponentPos);
-        opponentLandedCell.setMonster(opponent);
+        // Sync the players to the grid
+        this.getCell(player.getPosition()).setMonster(player);
+        this.getCell(opponent.getPosition()).setMonster(opponent);
     }
 
 }
