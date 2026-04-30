@@ -15,26 +15,30 @@ public class Game {
     private Monster current; // Getter and setter
 
     public Game(Role playerRole) throws IOException {
+        // 1. Load the data
         this.board = new Board(DataLoader.readCards());
         this.allMonsters = DataLoader.readMonsters();
-        Board.setStationedMonsters(this.allMonsters);
-        this.board.initializeBoard(DataLoader.readCells());
-        this.player = selectRandomMonsterByRole(playerRole);
 
+        // 2. Select the players
+        this.player = selectRandomMonsterByRole(playerRole);
         if(playerRole == Role.SCARER)
             this.opponent = selectRandomMonsterByRole(Role.LAUGHER);
         else
             this.opponent = selectRandomMonsterByRole(Role.SCARER);
 
-        this.current = player;
+        // 3. FIX: Remove them from the list so they aren't placed on MonsterCells
+        this.allMonsters.remove(this.player);
+        this.allMonsters.remove(this.opponent);
 
+        // 4. Initialize the Board with the remaining monsters
+        Board.setStationedMonsters(this.allMonsters);
+        this.board.initializeBoard(DataLoader.readCells());
+
+        // 5. Setup starting state
+        this.current = player;
         this.player.setPosition(Constants.STARTING_POSITION);
         this.opponent.setPosition(Constants.STARTING_POSITION);
-        this.current = player;
-
-
     }
-
     private Monster selectRandomMonsterByRole(Role role) {
         ArrayList<Monster> filtered = new ArrayList<>();
         for (Monster m : allMonsters) {
