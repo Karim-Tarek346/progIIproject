@@ -8,7 +8,7 @@ public class CardCell extends Cell{
 
     public CardCell(String name){
         super(name);
-        Card card = Board.drawCard();
+
     }
 
     @Override
