@@ -32,6 +32,7 @@ public class MultiTasker extends Monster{
     public void move(int distance) {
         if (this.normalSpeedTurns > 0) {
             super.move(distance);
+            this.normalSpeedTurns--;
         } else {
             super.move(distance / 2);
         }
