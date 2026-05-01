@@ -31,7 +31,7 @@ public abstract class Monster implements Comparable<Monster>{
 
     public int compareTo(Monster o){
         return this.position - o.getPosition();
-    };
+    }
 
     public Role getRole() {
         return role;
@@ -104,18 +104,17 @@ public abstract class Monster implements Comparable<Monster>{
     }
 
     public final void alterEnergy(int energy) {
-        int modifiedEnergy = energy;
 
-        // Apply passives using the modifiedEnergy variable
-        if (this instanceof Dynamo && energy > 0) modifiedEnergy = energy * 2;
-        if (this instanceof MultiTasker) modifiedEnergy = energy + Constants.MULTITASKER_BONUS;
-        if (this instanceof Schemer) modifiedEnergy = energy + Constants.SCHEMER_STEAL;
+
+        if (this instanceof Dynamo && energy > 0) energy = energy * 2;
+        if (this instanceof MultiTasker) energy = energy + Constants.MULTITASKER_BONUS;
+        if (this instanceof Schemer) energy = energy + Constants.SCHEMER_STEAL;
 
         // Only block damage (negative energy) with a shield
-        if (this.isShielded() && modifiedEnergy < 0) {
+        if (this.isShielded() && energy < 0) {
             this.setShielded(false);
         } else {
-            this.setEnergy(this.getEnergy() + modifiedEnergy);
+            this.setEnergy(this.getEnergy() + energy);
         }
     }
 
