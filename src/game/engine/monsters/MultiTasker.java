@@ -29,9 +29,12 @@ public class MultiTasker extends Monster{
     }
 
     @Override
-    public void move(int distance){
-        super.move(distance/2);
+    public void move(int distance) {
+        if (this.normalSpeedTurns > 0) {
+            super.move(distance);
+        } else {
+            super.move(distance / 2);
+        }
     }
-
 
 }
