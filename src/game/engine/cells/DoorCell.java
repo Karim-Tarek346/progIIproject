@@ -25,35 +25,39 @@ public class DoorCell extends Cell implements CanisterModifier {
         monster.alterEnergy(canisterValue); //
     }
 
+// Inside src/game/engine/cells/DoorCell.java
+
     @Override
-    public void onLand(Monster landingMonster, Monster opponentMonster){
-        super.onLand(landingMonster, opponentMonster); //
+    public void onLand(Monster landingMonster, Monster opponentMonster) {
+        super.onLand(landingMonster, opponentMonster);
 
         if (!this.isActivated()) {
-            // Determine if it's a bonus (+) or penalty (-)
-            int effectValue = (landingMonster.getRole() == this.role) ? this.energy : -this.energy; //
+            int effectValue = (landingMonster.getRole() == this.role) ? this.energy : -this.energy;
 
-            // Record energy before changes to check if shield was used
             int oldEnergy = landingMonster.getEnergy();
+            this.modifyCanisterEnergy(landingMonster, effectValue);
+            boolean energyChanged = (landingMonster.getEnergy() != oldEnergy);
 
-            // 1. Apply to the landing monster directly
-            this.modifyCanisterEnergy(landingMonster, effectValue); //
-
-            // 2. Apply to the TEAM (All monsters with the landing monster's role)
-            // This includes the landing monster again, which explains the 320 vs 210 failure
-            for (Monster m : Board.getStationedMonsters()) { //
-                if (m.getRole() == landingMonster.getRole()) {
-                    this.modifyCanisterEnergy(m, effectValue); //
+            if (Board.getStationedMonsters() != null) {
+                for (Monster m : Board.getStationedMonsters()) {
+                    // Ensure we don't apply the effect to the landing monster twice
+                    if (m != landingMonster && m.getRole() == landingMonster.getRole()) {
+                        int mOldEnergy = m.getEnergy();
+                        this.modifyCanisterEnergy(m, effectValue);
+                        if (m.getEnergy() != mOldEnergy) {
+                            energyChanged = true;
+                        }
+                    }
                 }
             }
 
-            // 3. Activation Logic: Only activate if someone's energy actually changed
-            // If a shield blocked the change, oldEnergy will equal newEnergy
-            if (landingMonster.getEnergy() != oldEnergy) { //
+            // Activate if ANY monster gained or lost energy
+            if (energyChanged) {
                 this.setActivated(true);
             }
         }
     }
+
     public int getEnergy() {
         return energy;
     }

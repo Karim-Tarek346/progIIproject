@@ -14,24 +14,30 @@ public class Schemer extends Monster {
         return this.getPosition() - o.getPosition();
     }
 
+// Inside src/game/engine/monsters/Schemer.java
+
     public void executePowerupEffect(Monster opponentMonster){
         int total = 0;
-        //opponent
         total += this.stealEnergyFrom(opponentMonster);
-        //stationed monsters
-        for(Monster stationed : Board.getStationedMonsters()){
-            total += this.stealEnergyFrom(stationed);
+
+        if (Board.getStationedMonsters() != null) {
+            for(Monster stationed : Board.getStationedMonsters()){
+                if (stationed != this) {
+                    total += this.stealEnergyFrom(stationed);
+                }
+            }
         }
-        int current = this.getEnergy();
-        //adding energy
-        this.alterEnergy(current + total);
+
+        // Just pass 'total'. alterEnergy will add it to the current energy.
+        this.alterEnergy(total);
     }
 
     private int stealEnergyFrom(Monster target){
+        if (target == null) return 0;
         int stealAmount = Constants.SCHEMER_STEAL;
         int targetEnergy = target.getEnergy();
         int stolen = Math.min(stealAmount, targetEnergy);
-        target.setEnergy(targetEnergy - stolen); //ignores shield
+        target.setEnergy(targetEnergy - stolen); // Ignores shield
         return stolen;
     }
 }

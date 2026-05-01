@@ -88,12 +88,14 @@ public class Game {
         this.current = getCurrentOpponent();
     }
 
+// Inside src/game/engine/Game.java
+
     private boolean checkWinCondition(Monster monster) {
-        // Monster must be at the final cell (99) with at least 1000 energy[cite: 2]
-        return monster.getPosition() >= Constants.WINNING_POSITION &&
+        if (monster == null) return false;
+
+        return monster.getPosition() == Constants.WINNING_POSITION &&
                 monster.getEnergy() >= Constants.WINNING_ENERGY;
     }
-
     public Monster getWinner() {
         if (checkWinCondition(player)) return player;
         if (checkWinCondition(opponent)) return opponent;

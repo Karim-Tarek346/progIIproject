@@ -99,59 +99,6 @@ public class Board {
 
     }
 
-    public void initializeBoard(ArrayList<Cell> specialCells) {
-
-        // creating the Board template
-        for(int i = 0; i<=99; i++){
-            if(i%2==0) setCell(i, new Cell("Normal cell"));
-            // DoorCell takes name, role , energy
-            else {
-                if((i/2)%2==0)
-                    setCell(i, new DoorCell("Door",Role.SCARER,0));
-                else setCell(i, new DoorCell("Door",Role.LAUGHER,0));
-            }
-        }
-        ArrayList<DoorCell> doorList = new ArrayList<>();
-        ArrayList<ConveyorBelt> conveyorList = new ArrayList<>();
-        ArrayList<ContaminationSock> sockList = new ArrayList<>();
-
-        // extracts Doorcells, ContaminationSock, and ConveyorBelt separately
-        for(Cell c: specialCells){
-            if(c instanceof DoorCell) doorList.add((DoorCell)c);
-            else if(c instanceof ConveyorBelt) conveyorList.add((ConveyorBelt)c);
-            else if(c instanceof ContaminationSock) sockList.add((ContaminationSock)c);
-        }
-
-        //Overwriting Doorcells
-        for(int i = 0; i< doorList.size(); i++){
-            setCell((i*2) + 1, doorList.get(i));
-        }
-        //CardCell
-        for(int i = 0; i<Constants.CARD_CELL_INDICES.length; i++){
-            setCell(Constants.CARD_CELL_INDICES[i], new CardCell("Card Cell"));
-        }
-        //Overwriting ConveyorBelt
-        for(int i = 0; i<Constants.CONVEYOR_CELL_INDICES.length && i<conveyorList.size(); i++){
-            setCell(Constants.CONVEYOR_CELL_INDICES[i], conveyorList.get(i));
-        }
-
-        //ContaminationSock
-        for(int i = 0; i < Constants.SOCK_CELL_INDICES.length && i<sockList.size(); i++){
-            setCell(Constants.SOCK_CELL_INDICES[i], sockList.get(i));
-        }
-
-
-        //MonsterCell
-        for(int i = 0; i<Constants.MONSTER_CELL_INDICES.length; i++){
-            Monster m = stationedMonsters.get(i);
-            m.setPosition(Constants.MONSTER_CELL_INDICES[i]);
-            setCell(Constants.MONSTER_CELL_INDICES[i], new MonsterCell(m.getName(), m));
-        }
-
-
-
-    }
-
     public void moveMonster(Monster currentMonster, int roll, Monster opponentMonster) throws InvalidMoveException {
         int originalPosition = currentMonster.getPosition();
         currentMonster.move(roll);
@@ -178,6 +125,67 @@ public class Board {
         currentMonster.decrementConfusion();
 
         this.updateMonsterPositions(currentMonster, opponentMonster);
+    }
+
+// Inside src/game/engine/Board.java
+
+    public void initializeBoard(ArrayList<Cell> specialCells) {
+        // 1. Create the Board template
+        for(int i = 0; i <= 99; i++){
+            if(i % 2 == 0) setCell(i, new Cell("Normal cell"));
+            else {
+                if((i / 2) % 2 == 0)
+                    setCell(i, new DoorCell("Door", Role.SCARER, 0));
+                else
+                    setCell(i, new DoorCell("Door", Role.LAUGHER, 0));
+            }
+        }
+
+        ArrayList<DoorCell> doorList = new ArrayList<>();
+        ArrayList<ConveyorBelt> conveyorList = new ArrayList<>();
+        ArrayList<ContaminationSock> sockList = new ArrayList<>();
+
+        if (specialCells != null) {
+            for(Cell c : specialCells){
+                if(c instanceof DoorCell) doorList.add((DoorCell)c);
+                else if(c instanceof ConveyorBelt) conveyorList.add((ConveyorBelt)c);
+                else if(c instanceof ContaminationSock) sockList.add((ContaminationSock)c);
+            }
+        }
+
+        // 2. Overwriting Doorcells (Safely)
+        int doorIdx = 0;
+        for(int i = 1; i <= 99; i += 2) {
+            if (doorIdx < doorList.size()) {
+                setCell(i, doorList.get(doorIdx++));
+            }
+        }
+
+        // 3. CardCell
+        for(int i = 0; i < Constants.CARD_CELL_INDICES.length; i++){
+            setCell(Constants.CARD_CELL_INDICES[i], new CardCell("Card Cell"));
+        }
+
+        // 4. Overwriting ConveyorBelt
+        for(int i = 0; i < Constants.CONVEYOR_CELL_INDICES.length && i < conveyorList.size(); i++){
+            setCell(Constants.CONVEYOR_CELL_INDICES[i], conveyorList.get(i));
+        }
+
+        // 5. ContaminationSock
+        for(int i = 0; i < Constants.SOCK_CELL_INDICES.length && i < sockList.size(); i++){
+            setCell(Constants.SOCK_CELL_INDICES[i], sockList.get(i));
+        }
+
+        // 6. MonsterCell (Safely check against stationedMonsters.size())
+        if (stationedMonsters != null) {
+            for(int i = 0; i < Constants.MONSTER_CELL_INDICES.length && i < stationedMonsters.size(); i++){
+                Monster m = stationedMonsters.get(i);
+                if (m != null) {
+                    m.setPosition(Constants.MONSTER_CELL_INDICES[i]);
+                    setCell(Constants.MONSTER_CELL_INDICES[i], new MonsterCell(m.getName(), m));
+                }
+            }
+        }
     }
 
     private void updateMonsterPositions(Monster player, Monster opponent) {
