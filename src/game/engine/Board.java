@@ -100,60 +100,54 @@ public class Board {
     }
 
     public void initializeBoard(ArrayList<Cell> specialCells) {
-        // 1. Separate cells (Logic remains same)
-        ArrayList<DoorCell> doors = new ArrayList<>();
-        ArrayList<Cell> belts = new ArrayList<>();
-        ArrayList<Cell> socks = new ArrayList<>();
-        for (Cell c : specialCells) {
-            if (c instanceof DoorCell) doors.add((DoorCell) c);
-            else if (c instanceof ConveyorBelt) belts.add(c);
-            else if (c instanceof ContaminationSock) socks.add(c);
-        }
 
-        // 2. Build Grid with Safety Checks
-        int doorIndex = 0;
-        for (int i = 0; i < Constants.BOARD_SIZE; i++) {
-            if (i % 2 == 0) {
-                this.setCell(i, new Cell("Rest Cell"));
-            } else {
-                if (doorIndex < doors.size()) {
-                    this.setCell(i, doors.get(doorIndex));
-                    doorIndex++;
-                } else {
-                    this.setCell(i, new Cell("Rest Cell"));
-                }
+        // creating the Board template
+        for(int i = 0; i<=99; i++){
+            if(i%2==0) setCell(i, new Cell("Normalcells"));
+            // DoorCell takes name, role , energy
+            else {
+                if((i/2)%2==0)
+                    setCell(i, new DoorCell("Doorcell",Role.SCARER,0));
+                else setCell(i, new DoorCell("Doorcell",Role.LAUGHER,0));
             }
         }
+        ArrayList<DoorCell> doorList = new ArrayList<>();
+        ArrayList<ConveyorBelt> conveyorList = new ArrayList<>();
+        ArrayList<ContaminationSock> sockList = new ArrayList<>();
 
-        // 3. Overwrite with Specials using list size checks
-        int beltIndex = 0;
-        for (int index : Constants.CONVEYOR_CELL_INDICES) {
-            if (beltIndex < belts.size()) {
-                this.setCell(index, belts.get(beltIndex));
-                beltIndex++;
-            }
+        // extracts Doorcells, ContaminationSock, and ConveyorBelt separately
+        for(Cell c: specialCells){
+            if(c instanceof DoorCell) doorList.add((DoorCell)c);
+            else if(c instanceof ConveyorBelt) conveyorList.add((ConveyorBelt)c);
+            else if(c instanceof ContaminationSock) sockList.add((ContaminationSock)c);
         }
 
-        int sockIndex = 0;
-        for (int index : Constants.SOCK_CELL_INDICES) {
-            if (sockIndex < socks.size()) {
-                this.setCell(index, socks.get(sockIndex));
-                sockIndex++;
-            }
+        //Overwriting Doorcells
+        for(int i = 0; i< doorList.size(); i++){
+            setCell((i*2) + 1, doorList.get(i));
         }
 
-        for (int index : Constants.CARD_CELL_INDICES) {
-            this.setCell(index, new CardCell("Card Cell"));
+        //Overwriting ContaminationSock
+        for(int i = 0; i < Constants.SOCK_CELL_INDICES.length; i++){
+            setCell(Constants.SOCK_CELL_INDICES[i], sockList.get(i));
+        }
+        //Overwriting ConveyorBelt
+        for(int i = 0; i<Constants.CONVEYOR_CELL_INDICES.length; i++){
+            setCell(Constants.CONVEYOR_CELL_INDICES[i], conveyorList.get(i));
+        }
+        //CardCell
+        for(int i = 0; i<Constants.CARD_CELL_INDICES.length; i++){
+            setCell(Constants.CARD_CELL_INDICES[i], new CardCell("Card Cell"));
+        }
+        //MonsterCell
+        for(int i = 0; i<Constants.MONSTER_CELL_INDICES.length; i++){
+            Monster m = stationedMonsters.get(i);
+            m.setPosition(Constants.MONSTER_CELL_INDICES[i]);
+            setCell(Constants.MONSTER_CELL_INDICES[i], new MonsterCell("Monster Cell", m));
         }
 
-        // 4. Station Monsters
-        ArrayList<Monster> stationed = getStationedMonsters();
-        for (int i = 0; i < stationed.size(); i++) {
-            Monster m = stationed.get(i);
-            int pos = Constants.MONSTER_CELL_INDICES[i];
-            m.setPosition(pos);
-            this.setCell(pos, new MonsterCell("Monster Cell", m));
-        }
+
+
     }
 
     public void moveMonster(Monster currentMonster, int roll, Monster opponentMonster) throws InvalidMoveException {
