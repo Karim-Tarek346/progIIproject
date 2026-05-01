@@ -20,8 +20,8 @@ public abstract class TransportCell extends Cell{
         super.onLand(landingMonster, opponentMonster);
         this.transport(landingMonster);
     }
-
+    //not monster.move(effect); cuz it implements the passive features twice
     public void transport(Monster monster){
-        monster.move(effect);
+        monster.setPosition(monster.getPosition() + effect);
     }
 }

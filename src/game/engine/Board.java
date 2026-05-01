@@ -103,12 +103,12 @@ public class Board {
 
         // creating the Board template
         for(int i = 0; i<=99; i++){
-            if(i%2==0) setCell(i, new Cell("Normalcells"));
+            if(i%2==0) setCell(i, new Cell("Normal cell"));
             // DoorCell takes name, role , energy
             else {
                 if((i/2)%2==0)
-                    setCell(i, new DoorCell("Doorcell",Role.SCARER,0));
-                else setCell(i, new DoorCell("Doorcell",Role.LAUGHER,0));
+                    setCell(i, new DoorCell("Door",Role.SCARER,0));
+                else setCell(i, new DoorCell("Door",Role.LAUGHER,0));
             }
         }
         ArrayList<DoorCell> doorList = new ArrayList<>();
