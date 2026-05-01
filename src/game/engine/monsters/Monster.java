@@ -105,6 +105,9 @@ public abstract class Monster implements Comparable<Monster>{
 
     public final void alterEnergy(int energy) {
 
+        if (this instanceof Dynamo) energy = energy * 2;
+        if (this instanceof MultiTasker && energy !=0) energy = energy + Constants.MULTITASKER_BONUS;
+        if (this instanceof Schemer) energy = energy + Constants.SCHEMER_STEAL;
         //checking the shield and damage before applying passive features
         // Only block damage (negative energy) with a shield
         if (this.isShielded() && energy < 0) {
@@ -113,9 +116,6 @@ public abstract class Monster implements Comparable<Monster>{
             this.setEnergy(this.getEnergy() + energy);
         }
 
-        if (this instanceof Dynamo) energy = energy * 2;
-        if (this instanceof MultiTasker && energy !=0) energy = energy + Constants.MULTITASKER_BONUS;
-        if (this instanceof Schemer) energy = energy + Constants.SCHEMER_STEAL;
 
 
     }
