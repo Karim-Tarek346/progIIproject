@@ -126,19 +126,21 @@ public class Board {
         for(int i = 0; i< doorList.size(); i++){
             setCell((i*2) + 1, doorList.get(i));
         }
-
-        //Overwriting ContaminationSock
-        for(int i = 0; i < Constants.SOCK_CELL_INDICES.length; i++){
-            setCell(Constants.SOCK_CELL_INDICES[i], sockList.get(i));
-        }
-        //Overwriting ConveyorBelt
-        for(int i = 0; i<Constants.CONVEYOR_CELL_INDICES.length; i++){
-            setCell(Constants.CONVEYOR_CELL_INDICES[i], conveyorList.get(i));
-        }
         //CardCell
         for(int i = 0; i<Constants.CARD_CELL_INDICES.length; i++){
             setCell(Constants.CARD_CELL_INDICES[i], new CardCell("Card Cell"));
         }
+        //Overwriting ConveyorBelt
+        for(int i = 0; i<Constants.CONVEYOR_CELL_INDICES.length && i<conveyorList.size(); i++){
+            setCell(Constants.CONVEYOR_CELL_INDICES[i], conveyorList.get(i));
+        }
+
+        //ContaminationSock
+        for(int i = 0; i < Constants.SOCK_CELL_INDICES.length && i<sockList.size(); i++){
+            setCell(Constants.SOCK_CELL_INDICES[i], sockList.get(i));
+        }
+
+
         //MonsterCell
         for(int i = 0; i<Constants.MONSTER_CELL_INDICES.length; i++){
             Monster m = stationedMonsters.get(i);
