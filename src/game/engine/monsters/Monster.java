@@ -109,7 +109,7 @@ public abstract class Monster implements Comparable<Monster>{
         if (this instanceof MultiTasker && energy !=0) energy = energy + Constants.MULTITASKER_BONUS;
         if (this instanceof Schemer) energy = energy + Constants.SCHEMER_STEAL;
         
-        // Only block negative energy with a shield
+        
         if (this.isShielded() && energy < 0) {
             this.setShielded(false);
         } else {
