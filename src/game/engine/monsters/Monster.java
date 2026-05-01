@@ -106,8 +106,8 @@ public abstract class Monster implements Comparable<Monster>{
     public final void alterEnergy(int energy) {
 
 
-        if (this instanceof Dynamo && energy > 0) energy = energy * 2;
-        if (this instanceof MultiTasker) energy = energy + Constants.MULTITASKER_BONUS;
+        if (this instanceof Dynamo) energy = energy * 2;
+        if (this instanceof MultiTasker && energy !=0) energy = energy + Constants.MULTITASKER_BONUS;
         if (this instanceof Schemer) energy = energy + Constants.SCHEMER_STEAL;
 
         // Only block damage (negative energy) with a shield
