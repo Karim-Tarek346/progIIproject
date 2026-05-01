@@ -15,16 +15,13 @@ public class EnergyStealCard extends Card implements CanisterModifier {
         return energy;
     }
 
-// Inside src/game/engine/cards/EnergyStealCard.java
-
     @Override
     public void performAction(Monster player, Monster opponent) {
-        int stealAmount = Math.min(this.energy, opponent.getEnergy());
         int opponentOldEnergy = opponent.getEnergy();
 
-        modifyCanisterEnergy(opponent, -stealAmount);
+        modifyCanisterEnergy(opponent, -this.energy);
 
-        // Only give player the energy that was ACTUALLY lost by the opponent
+        // Only give player the energy that was ACTUALLY lost by the opponent after passives
         int actualStolen = opponentOldEnergy - opponent.getEnergy();
         if (actualStolen > 0) {
             modifyCanisterEnergy(player, actualStolen);
