@@ -24,8 +24,7 @@ public class MonsterCell extends Cell {
         } else if (landingMonster.getEnergy() > cellMonster.getEnergy()) {
             int landingOldEnergy = landingMonster.getEnergy();
             int cellOldEnergy = cellMonster.getEnergy();
-
-            // Calculate differences for alterEnergy to handle passives/shields correctly
+            
             int changeForLanding = cellOldEnergy - landingOldEnergy;
             int changeForCell = landingOldEnergy - cellOldEnergy;
 
