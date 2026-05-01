@@ -16,7 +16,8 @@ public class MonsterCell extends Cell {
     }
 
     @Override
-    public void onLand(Monster landingMonster, Monster opponentMonster) throws InvalidMoveException {
+    public void onLand(Monster landingMonster, Monster opponentMonster){
+        super.onLand(landingMonster, opponentMonster);
         if (landingMonster.getRole().equals(cellMonster.getRole()))
             landingMonster.executePowerupEffect(opponentMonster);
 

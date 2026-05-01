@@ -28,9 +28,7 @@ public class Cell {
         return monster != null;
     }
 
-    public void onLand(Monster landingMonster, Monster opponentMonster) throws InvalidMoveException {
-        if(isOccupied())
-            throw new InvalidMoveException("Cannot replace Monster in this cell");
+    public void onLand(Monster landingMonster, Monster opponentMonster){
         this.monster = landingMonster;
 
     }

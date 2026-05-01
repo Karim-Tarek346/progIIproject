@@ -26,7 +26,7 @@ public class DoorCell extends Cell implements CanisterModifier {
     }
 
     @Override
-    public void onLand(Monster landingMonster, Monster opponentMonster) throws InvalidMoveException {
+    public void onLand(Monster landingMonster, Monster opponentMonster){
         super.onLand(landingMonster, opponentMonster); //
 
         if (!this.isActivated()) {

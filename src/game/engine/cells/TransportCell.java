@@ -16,15 +16,12 @@ public abstract class TransportCell extends Cell{
     }
 
     @Override
-    public void onLand(Monster landingMonster, Monster opponentMonster) throws InvalidMoveException {
+    public void onLand(Monster landingMonster, Monster opponentMonster) {
         super.onLand(landingMonster, opponentMonster);
-        transport(landingMonster);
+        this.transport(landingMonster);
     }
 
-    public void transport(Monster monster) throws InvalidMoveException{
+    public void transport(Monster monster){
         monster.move(effect);
-        //if out of the board
-        if(monster.getPosition() > 99) throw new InvalidMoveException("Exceed Maximum index");
-        else if (monster.getPosition() < 0) throw new InvalidMoveException("Exceeded Minimum index");
     }
 }
