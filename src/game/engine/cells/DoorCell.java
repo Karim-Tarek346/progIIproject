@@ -19,6 +19,7 @@ public class DoorCell extends Cell implements CanisterModifier {
 
     @Override
     public void modifyCanisterEnergy(Monster monster, int canisterValue) {
+        // Handle the sign flip here, so onLand always passes the positive this.energy
         if (monster.getRole() == this.role) {
             monster.alterEnergy(canisterValue);
         } else {
@@ -32,48 +33,46 @@ public class DoorCell extends Cell implements CanisterModifier {
 
         if (!this.isActivated()) {
             boolean isPenalty = (landingMonster.getRole() != this.role);
-            boolean teamShielded = false;
-            Monster shieldProvider = null;
 
-            // Check if ANY member of the team can provide a shield against the penalty
+            // 1. Team-wide Shield Check
             if (isPenalty) {
+                Monster shieldProvider = null;
                 if (landingMonster.isShielded()) {
-                    teamShielded = true;
                     shieldProvider = landingMonster;
                 } else if (Board.getStationedMonsters() != null) {
                     for (Monster m : Board.getStationedMonsters()) {
                         if (m.getRole() == landingMonster.getRole() && m.isShielded()) {
-                            teamShielded = true;
                             shieldProvider = m;
                             break;
                         }
                     }
                 }
+
+                // If anyone has a shield, consume it and block the entire penalty event.
+                if (shieldProvider != null) {
+                    shieldProvider.setShielded(false);
+                    return; // Door remains unactivated, nobody loses energy.
+                }
             }
 
-            if (teamShielded) {
-                shieldProvider.setShielded(false); // Consume the shield
-                return; // Penalty blocked, door remains unactivated
-            }
-
+            // 2. Apply Energy Changes
             int oldEnergy = landingMonster.getEnergy();
-            this.modifyCanisterEnergy(landingMonster, this.energy);
+            this.modifyCanisterEnergy(landingMonster, this.energy); // Pass positive
             boolean energyChanged = (landingMonster.getEnergy() != oldEnergy);
 
             if (Board.getStationedMonsters() != null) {
                 for (Monster m : Board.getStationedMonsters()) {
-                    // Ensure we don't apply the effect to the landing monster twice
                     if (m != landingMonster && m.getRole() == landingMonster.getRole()) {
-                        int mOldEnergy = m.getEnergy();
-                        this.modifyCanisterEnergy(m, this.energy);
-                        if (m.getEnergy() != mOldEnergy) {
+                        int mOld = m.getEnergy();
+                        this.modifyCanisterEnergy(m, this.energy); // Pass positive
+                        if (m.getEnergy() != mOld) {
                             energyChanged = true;
                         }
                     }
                 }
             }
 
-            // Activate if ANY monster gained or lost energy
+            // 3. Activate if ANY energy changed
             if (energyChanged) {
                 this.setActivated(true);
             }

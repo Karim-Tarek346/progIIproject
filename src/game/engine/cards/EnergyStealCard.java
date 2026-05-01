@@ -17,11 +17,13 @@ public class EnergyStealCard extends Card implements CanisterModifier {
 
     @Override
     public void performAction(Monster player, Monster opponent) {
+        // Clamp the steal amount to what the opponent actually has
+        int stealAmount = Math.min(this.energy, opponent.getEnergy());
         int opponentOldEnergy = opponent.getEnergy();
 
-        modifyCanisterEnergy(opponent, -this.energy);
+        modifyCanisterEnergy(opponent, -stealAmount);
 
-        // Only give player the energy that was ACTUALLY lost by the opponent after passives
+        // Player only gets what was ACTUALLY lost by the opponent after passives/shields
         int actualStolen = opponentOldEnergy - opponent.getEnergy();
         if (actualStolen > 0) {
             modifyCanisterEnergy(player, actualStolen);

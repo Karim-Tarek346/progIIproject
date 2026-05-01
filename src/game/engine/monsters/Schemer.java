@@ -36,7 +36,7 @@ public class Schemer extends Monster {
         boolean wasShielded = target.isShielded();
         target.setShielded(false); // Temporarily remove shield to bypass it
 
-        target.alterEnergy(-Constants.SCHEMER_STEAL);
+        target.alterEnergy(-Constants.SCHEMER_STEAL); // Route through alterEnergy for passives
 
         if (wasShielded) target.setShielded(true); // Restore shield if they had one
 
