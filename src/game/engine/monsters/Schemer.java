@@ -14,6 +14,7 @@ public class Schemer extends Monster {
         return this.getPosition() - o.getPosition();
     }
 
+    @Override
     public void executePowerupEffect(Monster opponentMonster){
         int total = 0;
         total += this.stealEnergyFrom(opponentMonster);
@@ -26,21 +27,17 @@ public class Schemer extends Monster {
             }
         }
 
+        // Apply the accumulated total using alterEnergy so the Schemer's passive (+10) is added
         this.alterEnergy(total);
     }
 
     private int stealEnergyFrom(Monster target){
         if (target == null) return 0;
-        int targetOldEnergy = target.getEnergy();
-
-        boolean wasShielded = target.isShielded();
-        target.setShielded(false); // Temporarily remove shield to bypass it
-
-        target.alterEnergy(-Constants.SCHEMER_STEAL); // Route through alterEnergy for passives
-
-        if (wasShielded) target.setShielded(true); // Restore shield if they had one
-
-        int stolen = targetOldEnergy - target.getEnergy();
-        return Math.max(0, stolen);
+        
+        // Strictly steal up to 10 energy, ignoring the target's passives and shields
+        int stealAmount = Math.min(Constants.SCHEMER_STEAL, target.getEnergy());
+        target.setEnergy(target.getEnergy() - stealAmount);
+        
+        return stealAmount;
     }
 }
