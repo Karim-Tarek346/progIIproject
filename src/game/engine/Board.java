@@ -21,10 +21,9 @@ public class Board {
         originalCards = readCards;
         this.boardCells = new Cell[Constants.BOARD_ROWS][Constants.BOARD_COLS];
 
-        // Expands the originalCards list based on the rarity of each card
         this.setCardsByRarity();
 
-        // Copies the expanded originalCards into the active 'cards' deck and shuffles it
+
         Board.reloadCards();
 
     }
@@ -70,7 +69,7 @@ public class Board {
     }
 
     public static void reloadCards() {
-        // Create a new list using the elements of the original
+
         cards = new ArrayList<>(originalCards);
         Collections.shuffle(cards);
     }
@@ -111,11 +110,11 @@ public class Board {
             throw new InvalidMoveException("Cannot land on the opponent.");
         }
 
-        // Trigger cell effect
+
         Cell landedCell = this.getCell(currentMonster.getPosition());
         landedCell.onLand(currentMonster, opponentMonster);
 
-        // Second collision check after traps/cards
+
         if (currentMonster.getPosition() == opponentMonster.getPosition()) {
             currentMonster.setPosition(originalPosition);
             throw new InvalidMoveException("Trap caused collision.");
@@ -127,10 +126,10 @@ public class Board {
         this.updateMonsterPositions(currentMonster, opponentMonster);
     }
 
-// Inside src/game/engine/Board.java
+
 
     public void initializeBoard(ArrayList<Cell> specialCells) {
-        // 1. Create the Board template
+
         for(int i = 0; i <= 99; i++){
             if(i % 2 == 0) setCell(i, new Cell("Normal cell"));
             else {
@@ -153,7 +152,7 @@ public class Board {
             }
         }
 
-        // 2. Overwriting Doorcells (Safely)
+        // 2. Overwriting Doorcells
         int doorIdx = 0;
         for(int i = 1; i <= 99; i += 2) {
             if (doorIdx < doorList.size()) {
@@ -166,7 +165,7 @@ public class Board {
             setCell(Constants.CARD_CELL_INDICES[i], new CardCell("Card Cell"));
         }
 
-        // 4. Overwriting ConveyorBelt
+        // 4. ConveyorBelt
         for(int i = 0; i < Constants.CONVEYOR_CELL_INDICES.length && i < conveyorList.size(); i++){
             setCell(Constants.CONVEYOR_CELL_INDICES[i], conveyorList.get(i));
         }
@@ -176,7 +175,7 @@ public class Board {
             setCell(Constants.SOCK_CELL_INDICES[i], sockList.get(i));
         }
 
-        // 6. MonsterCell (Safely check against stationedMonsters.size())
+        // 6. MonsterCell
         if (stationedMonsters != null) {
             for(int i = 0; i < Constants.MONSTER_CELL_INDICES.length && i < stationedMonsters.size(); i++){
                 Monster m = stationedMonsters.get(i);
@@ -192,13 +191,11 @@ public class Board {
         for (int i = 0; i < Constants.BOARD_SIZE; i++) {
             Cell currentCell = this.getCell(i);
 
-            // PRESERVE STATIONED MONSTERS:
-            // Do not clear cells that are MonsterCells
             if (!(currentCell instanceof MonsterCell)) {
                 currentCell.setMonster(null);
             }
         }
-        // Sync the players to the grid
+        
         this.getCell(player.getPosition()).setMonster(player);
         this.getCell(opponent.getPosition()).setMonster(opponent);
     }

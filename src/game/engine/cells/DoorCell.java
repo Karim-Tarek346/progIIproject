@@ -16,10 +16,15 @@ public class DoorCell extends Cell implements CanisterModifier {
         this.energy = energy;
         this.activated = false;
     }
+    
+    public int getEnergy() { return energy; }
+    public Role getRole() { return role; }
+    public boolean isActivated() { return activated; }
+    public void setActivated(boolean activated) { this.activated = activated; }
 
     @Override
     public void modifyCanisterEnergy(Monster monster, int canisterValue) {
-        // Handle the sign flip here, so onLand always passes the positive this.energy
+
         if (monster.getRole() == this.role) {
             monster.alterEnergy(canisterValue);
         } else {
@@ -34,7 +39,7 @@ public class DoorCell extends Cell implements CanisterModifier {
         if (!this.isActivated()) {
             boolean isPenalty = (landingMonster.getRole() != this.role);
 
-            // 1. Team-wide Shield Check
+            
             if (isPenalty) {
                 Monster shieldProvider = null;
                 if (landingMonster.isShielded()) {
@@ -48,14 +53,14 @@ public class DoorCell extends Cell implements CanisterModifier {
                     }
                 }
 
-                // If anyone has a shield, consume it and block the entire penalty event.
+
                 if (shieldProvider != null) {
                     shieldProvider.setShielded(false);
-                    return; // Door remains unactivated, nobody loses energy.
+                    return; 
                 }
             }
 
-            // 2. Apply Energy Changes
+            
             int oldEnergy = landingMonster.getEnergy();
             this.modifyCanisterEnergy(landingMonster, this.energy); // Pass positive
             boolean energyChanged = (landingMonster.getEnergy() != oldEnergy);
@@ -72,15 +77,12 @@ public class DoorCell extends Cell implements CanisterModifier {
                 }
             }
 
-            // 3. Activate if ANY energy changed
+
             if (energyChanged) {
                 this.setActivated(true);
             }
         }
     }
 
-    public int getEnergy() { return energy; }
-    public Role getRole() { return role; }
-    public boolean isActivated() { return activated; }
-    public void setActivated(boolean activated) { this.activated = activated; }
+    
 }

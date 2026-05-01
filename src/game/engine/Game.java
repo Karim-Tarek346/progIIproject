@@ -16,12 +16,11 @@ public class Game {
     private Monster current;
 
     public Game(Role playerRole) throws IOException {
-        // 1. Load the data using DataLoader
-        // The Board constructor will handle setCardsByRarity and reloadCards[cite: 1]
+    	
         this.board = new Board(DataLoader.readCards());
         this.allMonsters = DataLoader.readMonsters();
 
-        // 2. Select the player and opponent monsters
+        
         this.player = selectRandomMonsterByRole(playerRole);
         if (playerRole == Role.SCARER) {
             this.opponent = selectRandomMonsterByRole(Role.LAUGHER);
@@ -29,23 +28,28 @@ public class Game {
             this.opponent = selectRandomMonsterByRole(Role.SCARER);
         }
 
-        // 3. Remove player and opponent from the list so they aren't used for MonsterCells
-        // This ensures precisely 6 monsters remain for the 6 MonsterCell indices[cite: 2]
+      
+
         this.allMonsters.remove(this.player);
         this.allMonsters.remove(this.opponent);
 
-        // 4. Set the stationed monsters in the Board class before initializing the grid[cite: 1]
-        // Since stationedMonsters is static in your Board, this makes it accessible to initializeBoard[cite: 1]
         Board.setStationedMonsters(this.allMonsters);
 
-        // 5. Initialize the board grid with specialized cells from CSV[cite: 1]
         this.board.initializeBoard(DataLoader.readCells());
 
-        // 6. Final turn and position setup[cite: 2]
         this.current = player;
-        this.player.setPosition(0); // Constants.STARTING_POSITION[cite: 2]
+        this.player.setPosition(0);
         this.opponent.setPosition(0);
     }
+    
+    
+    public Board getBoard() { return board; }
+    public ArrayList<Monster> getAllMonsters() { return allMonsters; }
+    public Monster getPlayer() { return player; }
+    public Monster getOpponent() { return opponent; }
+    public Monster getCurrent() { return current; }
+    public void setCurrent(Monster current) { this.current = current; }
+
 
     private Monster selectRandomMonsterByRole(Role role) {
         ArrayList<Monster> filtered = new ArrayList<>();
@@ -88,7 +92,7 @@ public class Game {
         this.current = getCurrentOpponent();
     }
 
-// Inside src/game/engine/Game.java
+
 
     private boolean checkWinCondition(Monster monster) {
         if (monster == null) return false;
@@ -102,11 +106,5 @@ public class Game {
         return null;
     }
 
-    // Getters
-    public Board getBoard() { return board; }
-    public ArrayList<Monster> getAllMonsters() { return allMonsters; }
-    public Monster getPlayer() { return player; }
-    public Monster getOpponent() { return opponent; }
-    public Monster getCurrent() { return current; }
-    public void setCurrent(Monster current) { this.current = current; }
+
 }
